@@ -1,0 +1,153 @@
+***************** properties *****************
+"insertproportion"="0"
+"fieldcount"="1"
+"fieldlength"="1"
+"readproportion"="0.5"
+"scanproportion"="0.4"
+"readallfields"="true"
+"dotransactions"="true"
+"workload"="com.yahoo.ycsb.workloads.CoreWorkload"
+"requestdistribution"="zipfian"
+"recordcount"="500"
+"updateproportion"="0.1"
+"operationcount"="100"
+"db"="com.yahoo.ycsb.BasicDB"
+**********************************************
+READ usertable user4168348136588276088 [ <all fields>]
+READ usertable user3685735031662953655 [ <all fields>]
+SCAN usertable user4394523714539545966 492 [ <all fields>]
+READ usertable user1000385178204227360 [ <all fields>]
+UPDATE usertable user7697331399106995587 [ field0=9 ]
+READ usertable user5585925502341460710 [ <all fields>]
+READ usertable user7581791361512805866 [ <all fields>]
+READ usertable user6973924209660459785 [ <all fields>]
+UPDATE usertable user1694555354510876180 [ field0=, ]
+SCAN usertable user7938808774216806086 879 [ <all fields>]
+READ usertable user5933010590494785120 [ <all fields>]
+SCAN usertable user7817899264014751554 151 [ <all fields>]
+READ usertable user4525023903997977743 [ <all fields>]
+READ usertable user7003502868094645332 [ <all fields>]
+READ usertable user7817899264014751554 [ <all fields>]
+UPDATE usertable user4640687271668624146 [ field0== ]
+UPDATE usertable user6752434813728457588 [ field0=. ]
+SCAN usertable user4394523714539545966 666 [ <all fields>]
+SCAN usertable user6973924209660459785 865 [ <all fields>]
+SCAN usertable user5450397485569462687 530 [ <all fields>]
+UPDATE usertable user402232035684715206 [ field0=; ]
+READ usertable user1945405093659222041 [ <all fields>]
+READ usertable user6988542716230403276 [ <all fields>]
+SCAN usertable user1487684465148817474 78 [ <all fields>]
+SCAN usertable user5233594271656728171 951 [ <all fields>]
+READ usertable user1362430418221793826 [ <all fields>]
+SCAN usertable user1578673671622387894 284 [ <all fields>]
+READ usertable user296624322641201295 [ <all fields>]
+READ usertable user1468379776559606302 [ <all fields>]
+SCAN usertable user7566831209648563810 362 [ <all fields>]
+READ usertable user8873773035044668275 [ <all fields>]
+UPDATE usertable user2056600594528442646 [ field0=7 ]
+READ usertable user4997363039078325801 [ <all fields>]
+SCAN usertable user7813213081995483873 86 [ <all fields>]
+SCAN usertable user1246548735333305540 595 [ <all fields>]
+READ usertable user3117160547577627048 [ <all fields>]
+READ usertable user7094492074568215752 [ <all fields>]
+SCAN usertable user4862176667600626343 988 [ <all fields>]
+READ usertable user7817899264014751554 [ <all fields>]
+READ usertable user8174698361500909891 [ <all fields>]
+SCAN usertable user8521783449654234301 636 [ <all fields>]
+READ usertable user412164360235391016 [ <all fields>]
+READ usertable user7003502868094645332 [ <all fields>]
+SCAN usertable user4409483866403788022 941 [ <all fields>]
+SCAN usertable user4866862849619894024 921 [ <all fields>]
+UPDATE usertable user7702359226420561833 [ field0=6 ]
+READ usertable user4394523714539545966 [ <all fields>]
+SCAN usertable user50460765512123115 630 [ <all fields>]
+READ usertable user6149253843895379188 [ <all fields>]
+SCAN usertable user3343336125528896926 160 [ <all fields>]
+SCAN usertable user1931004902307120433 64 [ <all fields>]
+SCAN usertable user7215059939475971719 675 [ <all fields>]
+READ usertable user2413276361938144301 [ <all fields>]
+READ usertable user8502137115770724564 [ <all fields>]
+READ usertable user4997704684372624366 [ <all fields>]
+READ usertable user6419968232145076669 [ <all fields>]
+SCAN usertable user3700353538232897146 382 [ <all fields>]
+SCAN usertable user5344448127231650211 549 [ <all fields>]
+SCAN usertable user2422990371270978228 2 [ <all fields>]
+SCAN usertable user7581791361512805866 539 [ <all fields>]
+READ usertable user6390389573710891122 [ <all fields>]
+SCAN usertable user2408371864701034737 642 [ <all fields>]
+SCAN usertable user3001497179906980645 250 [ <all fields>]
+READ usertable user1583919814153796023 [ <all fields>]
+SCAN usertable user8170012179481642210 61 [ <all fields>]
+SCAN usertable user513427536553935811 586 [ <all fields>]
+SCAN usertable user3338649943509629245 439 [ <all fields>]
+READ usertable user4992458541841216237 [ <all fields>]
+READ usertable user185988782284121138 [ <all fields>]
+UPDATE usertable user2760361450091468711 [ field0=- ]
+SCAN usertable user2513979577744548648 21 [ <all fields>]
+SCAN usertable user2760361450091468711 407 [ <all fields>]
+SCAN usertable user5933010590494785120 169 [ <all fields>]
+READ usertable user5937696772514052801 [ <all fields>]
+READ usertable user4519777761466569614 [ <all fields>]
+UPDATE usertable user2408371864701034737 [ field0=  ]
+READ usertable user2760361450091468711 [ <all fields>]
+SCAN usertable user2061286776547710327 290 [ <all fields>]
+SCAN usertable user4775873643146323604 62 [ <all fields>]
+READ usertable user2885957142312790924 [ <all fields>]
+SCAN usertable user5344789772525948776 298 [ <all fields>]
+SCAN usertable user1101648354522772155 894 [ <all fields>]
+SCAN usertable user513427536553935811 123 [ <all fields>]
+SCAN usertable user6646485455390645112 203 [ <all fields>]
+SCAN usertable user5937696772514052801 237 [ <all fields>]
+UPDATE usertable user4394523714539545966 [ field0=* ]
+READ usertable user4283888174182465809 [ <all fields>]
+SCAN usertable user3459217808417385212 13 [ <all fields>]
+SCAN usertable user7566831209648563810 445 [ <all fields>]
+UPDATE usertable user412164360235391016 [ field0=$ ]
+SCAN usertable user2051354451997034517 398 [ <all fields>]
+SCAN usertable user5952315279083996292 125 [ <all fields>]
+READ usertable user2191786966006142104 [ <all fields>]
+READ usertable user291938140621933614 [ <all fields>]
+READ usertable user6400321898261566932 [ <all fields>]
+READ usertable user4645373453687891827 [ <all fields>]
+UPDATE usertable user4293602183515299736 [ field0=  ]
+READ usertable user5821815089625564515 [ <all fields>]
+READ usertable user7330941622364460005 [ <all fields>]
+SCAN usertable user6038618303538299031 724 [ <all fields>]
+[OVERALL], RunTime(ms), 25.0
+[OVERALL], Throughput(ops/sec), 4000.0
+[TOTAL_GCS_PS_Scavenge], Count, 0.0
+[TOTAL_GC_TIME_PS_Scavenge], Time(ms), 0.0
+[TOTAL_GC_TIME_%_PS_Scavenge], Time(%), 0.0
+[TOTAL_GCS_PS_MarkSweep], Count, 0.0
+[TOTAL_GC_TIME_PS_MarkSweep], Time(ms), 0.0
+[TOTAL_GC_TIME_%_PS_MarkSweep], Time(%), 0.0
+[TOTAL_GCs], Count, 0.0
+[TOTAL_GC_TIME], Time(ms), 0.0
+[TOTAL_GC_TIME_%], Time(%), 0.0
+[READ], Operations, 44.0
+[READ], AverageLatency(us), 37.79545454545455
+[READ], MinLatency(us), 19.0
+[READ], MaxLatency(us), 396.0
+[READ], 95thPercentileLatency(us), 46.0
+[READ], 99thPercentileLatency(us), 396.0
+[READ], Return=OK, 44
+[CLEANUP], Operations, 1.0
+[CLEANUP], AverageLatency(us), 1.0
+[CLEANUP], MinLatency(us), 1.0
+[CLEANUP], MaxLatency(us), 1.0
+[CLEANUP], 95thPercentileLatency(us), 1.0
+[CLEANUP], 99thPercentileLatency(us), 1.0
+[UPDATE], Operations, 12.0
+[UPDATE], AverageLatency(us), 55.666666666666664
+[UPDATE], MinLatency(us), 31.0
+[UPDATE], MaxLatency(us), 156.0
+[UPDATE], 95thPercentileLatency(us), 88.0
+[UPDATE], 99thPercentileLatency(us), 156.0
+[UPDATE], Return=OK, 12
+[SCAN], Operations, 44.0
+[SCAN], AverageLatency(us), 29.34090909090909
+[SCAN], MinLatency(us), 20.0
+[SCAN], MaxLatency(us), 52.0
+[SCAN], 95thPercentileLatency(us), 46.0
+[SCAN], 99thPercentileLatency(us), 52.0
+[SCAN], Return=OK, 44

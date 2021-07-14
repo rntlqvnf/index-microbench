@@ -5,11 +5,9 @@
 *.o
 workload
 workload_string
-workloads
 result_*
 masstree/.deps/*.d
 *.cache
-YCSB
 *.status
 *.a
 emails_random.txt
