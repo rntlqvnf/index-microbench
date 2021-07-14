@@ -1,5 +1,6 @@
 import sys
 import os
+import random
 
 class bcolors:
     HEADER = '\033[95m'
@@ -40,19 +41,20 @@ output_dir='workloads/'
 
 workload = args[0]
 key_type = args[1]
+test_type = sys.argv[2] # [performance, coverage]
 
 print bcolors.OKGREEN + 'workload = ' + workload
 print 'key type = ' + key_type + bcolors.ENDC
 
 email_list = 'list.txt'
-email_list_size = 27549660
+email_list_size = 100000
 
 out_ycsb_load = output_dir + 'ycsb_load_' + key_type + '_' + workload
 out_ycsb_txn = output_dir + 'ycsb_txn_' + key_type + '_' + workload
 out_load_ycsbkey = output_dir + 'load_' + 'ycsbkey' + '_' + workload
 out_txn_ycsbkey = output_dir + 'txn_' + 'ycsbkey' + '_' + workload
-out_load = output_dir + 'load_' + key_type + '_' + workload
-out_txn = output_dir + 'txn_' + key_type + '_' + workload
+out_load = output_dir + test_type + '_' + 'load_' + key_type + '_' + workload
+out_txn = output_dir + test_type + '_' + 'txn_' + key_type + '_' + workload
 
 cmd_ycsb_load = ycsb_dir + 'bin/ycsb load basic -P ' + workload_dir + workload + ' -s > ' + out_ycsb_load
 cmd_ycsb_txn = ycsb_dir + 'bin/ycsb run basic -P ' + workload_dir + workload + ' -s > ' + out_ycsb_txn
@@ -92,6 +94,9 @@ os.system(cmd)
 
 #####################################################################################
 
+eof_bof = ['EOF', 'BOF']
+operators = ['EQ', 'LT', 'LE', 'GT', 'GE']
+
 if key_type == 'randint' :
     f_load = open (out_load_ycsbkey, 'r')
     f_load_out = open (out_load, 'w')
@@ -101,7 +106,12 @@ if key_type == 'randint' :
     f_txn = open (out_txn_ycsbkey, 'r')
     f_txn_out = open (out_txn, 'w')
     for line in f_txn :
-        f_txn_out.write (line)
+        if cols[0] == 'UPDATE' :
+            f_txn_out.write ('DELETE' + ' ' + cols[1] + '\n')
+        elif cols[0] == 'READ' :
+            f_txn_out.write ('SCAN' + ' ' + random.choice(eof_bof) + ' ' + random.choice(eof_bof) + '\n')
+        else :
+            f_txn_out.write (line)
 
 elif key_type == 'monoint' :
     keymap = {}
@@ -118,12 +128,31 @@ elif key_type == 'monoint' :
     f_txn_out = open (out_txn, 'w')
     for line in f_txn :
         cols = line.split()
-        if cols[0] == 'SCAN' :
-            f_txn_out.write (cols[0] + ' ' + str(keymap[int(cols[1])]) + ' ' + cols[2] + '\n')
-        elif cols[0] == 'INSERT' :
+        if cols[0] == 'INSERT' :
             keymap[int(cols[1])] = count
             f_txn_out.write (cols[0] + ' ' + str(count) + '\n')
             count += 1
+        elif cols[0] == 'UPDATE' :
+            if test_type == 'performance' :
+                f_txn_out.write ('DELETE' + ' ' + str(keymap[int(cols[1])]) + '\n')
+                f_txn_out.write ('INSERT' + ' ' + str(keymap[int(cols[1])]) + '\n')
+            elif test_type == 'coverage' :
+                f_txn_out.write ('DELETE' + ' ' + str(keymap[int(cols[1])]) + '\n')
+        elif cols[0] == 'SCAN' :
+            if test_type == 'performance' :
+                f_txn_out.write (cols[0] + ' ' + 'EQ' + ' ' + str(keymap[int(cols[1])]) + ' ' + 'EOF' + ' ' + cols[2] + '\n')
+            elif test_type == 'coverage' :
+                wraparound_second_key = (int(cols[1]) + int(cols[2])) % count
+                f_txn_out.write (cols[0] + ' ' + random.choice(operators) + ' ' + str(keymap[int(cols[1])]) + ' ' +
+                                random.choice(operators) + ' ' + str(wraparound_second_key) + '\n')
+        elif cols[0] == 'READ' :
+            if test_type == 'performance' :
+                f_txn_out.write ('SCAN' + ' ' + 'EQ' + ' ' + str(keymap[int(cols[1])]) + ' ' + 'EQ' + ' ' + str(keymap[int(cols[1])]) + '\n')
+            elif test_type == 'coverage' :
+                if random.randint(0,1) == 0 :
+                    f_txn_out.write ('SCAN' + ' ' + random.choice(eof_bof) + ' ' + random.choice(operators) + ' ' + str(keymap[int(cols[1])]) + '\n')
+                else :
+                    f_txn_out.write ('SCAN' + ' ' + random.choice(operators) + ' ' + str(keymap[int(cols[1])]) + ' ' + random.choice(eof_bof) + '\n')
         else :
             f_txn_out.write (cols[0] + ' ' + str(keymap[int(cols[1])]) + '\n')
 
@@ -143,23 +172,43 @@ elif key_type == 'email' :
     count = 0
     for line in f_load :
         cols = line.split()
-        email = reverseHostName(emails[count * gap])
+        email = emails[count * gap].rstrip()
         keymap[int(cols[1])] = email
         f_load_out.write (cols[0] + ' ' + email + '\n')
         count += 1
 
+    tot_count = count
     count = 0
     f_txn = open (out_txn_ycsbkey, 'r')
     f_txn_out = open (out_txn, 'w')
     for line in f_txn :
         cols = line.split()
-        if cols[0] == 'SCAN' :
-            f_txn_out.write (cols[0] + ' ' + keymap[int(cols[1])] + ' ' + cols[2] + '\n')
-        elif cols[0] == 'INSERT' :
-            email = reverseHostName(emails[count * gap + 1])
+        if cols[0] == 'INSERT' :
+            email = emails[count * gap + 1].rstrip()
             keymap[int(cols[1])] = email
             f_txn_out.write (cols[0] + ' ' + email + '\n')
             count += 1
+        elif cols[0] == 'UPDATE' :
+            if test_type == 'performance' :
+                f_txn_out.write ('DELETE' + ' ' + str(keymap[int(cols[1])]) + '\n')
+                f_txn_out.write ('INSERT' + ' ' + str(keymap[int(cols[1])]) + '\n')
+            elif test_type == 'coverage' :
+                f_txn_out.write ('DELETE' + ' ' + str(keymap[int(cols[1])]) + '\n')
+        elif cols[0] == 'SCAN' :
+            if test_type == 'performance' :
+                f_txn_out.write (cols[0] + ' ' + 'EQ' + ' ' + str(keymap[int(cols[1])]) + ' ' + 'EOF' + ' ' + cols[2] + '\n')
+            elif test_type == 'coverage' :
+                wraparound_second_key = (int(cols[1]) + int(cols[2])) % tot_count
+                f_txn_out.write (cols[0] + ' ' + random.choice(operators) + ' ' + str(keymap[int(cols[1])]) + ' ' +
+                                random.choice(operators) + ' ' + str(wraparound_second_key) + '\n')
+        elif cols[0] == 'READ' :
+            if test_type == 'performance' :
+                f_txn_out.write ('SCAN' + ' ' + 'EQ' + ' ' + str(keymap[int(cols[1])]) + ' ' + 'EQ' + ' ' + str(keymap[int(cols[1])]) + '\n')
+            elif test_type == 'coverage' :
+                if random.randint(0,1) == 0 :
+                    f_txn_out.write ('SCAN' + ' ' + random.choice(eof_bof) + ' ' + random.choice(operators) + ' ' + str(keymap[int(cols[1])]) + '\n')
+                else :
+                    f_txn_out.write ('SCAN' + ' ' + random.choice(operators) + ' ' + str(keymap[int(cols[1])]) + ' ' + random.choice(eof_bof) + '\n')
         else :
             f_txn_out.write (cols[0] + ' ' + keymap[int(cols[1])] + '\n')
 
