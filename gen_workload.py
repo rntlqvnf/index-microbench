@@ -66,10 +66,14 @@ os.system(cmd_ycsb_txn)
 
 f_load = open (out_ycsb_load, 'r')
 f_load_out = open (out_load_ycsbkey, 'w')
+keylist = []
+count = 0
 for line in f_load :
     cols = line.split()
     if len(cols) > 0 and cols[0] == "INSERT":
         f_load_out.write (cols[0] + " " + cols[2][4:] + "\n")
+        keylist.append(cols[2][4:])
+        count += 1
 f_load.close()
 f_load_out.close()
 
@@ -106,12 +110,32 @@ if key_type == 'randint' :
     f_txn = open (out_txn_ycsbkey, 'r')
     f_txn_out = open (out_txn, 'w')
     for line in f_txn :
-        if cols[0] == 'UPDATE' :
-            f_txn_out.write ('DELETE' + ' ' + cols[1] + '\n')
-        elif cols[0] == 'READ' :
-            f_txn_out.write ('SCAN' + ' ' + random.choice(eof_bof) + ' ' + random.choice(eof_bof) + '\n')
-        else :
+        cols = line.split()
+        if cols[0] == 'INSERT' :
+            keylist.append(cols[1])
             f_txn_out.write (line)
+            count += 1
+        elif cols[0] == 'UPDATE' :
+            if test_type == 'performance' :
+                f_txn_out.write ('DELETE' + ' ' + cols[1] + '\n')
+                f_txn_out.write ('INSERT' + ' ' + cols[1] + '\n')
+            elif test_type == 'coverage' :
+                f_txn_out.write ('DELETE' + ' ' + cols[1] + '\n')
+        elif cols[0] == 'SCAN' :
+            if test_type == 'performance' :
+                f_txn_out.write (cols[0] + ' ' + 'EQ' + ' ' + cols[1] + ' ' + 'EOF' + ' ' + cols[2] + '\n')
+            elif test_type == 'coverage' :
+                second_key_index = (keylist.index(cols[1]) + int(cols[2])) % count
+                f_txn_out.write (cols[0] + ' ' + random.choice(operators) + ' ' + cols[1] + ' ' +
+                                random.choice(operators) + ' ' + str(keylist[second_key_index]) + '\n')
+        elif cols[0] == 'READ' :
+            if test_type == 'performance' :
+                f_txn_out.write ('SCAN' + ' ' + 'EQ' + ' ' + cols[1] + ' ' + 'EQ' + ' ' + cols[1] + '\n')
+            elif test_type == 'coverage' :
+                if random.randint(0,1) == 0 :
+                    f_txn_out.write ('SCAN' + ' ' + random.choice(eof_bof) + ' ' + random.choice(operators) + ' ' + cols[1] + '\n')
+                else :
+                    f_txn_out.write ('SCAN' + ' ' + random.choice(operators) + ' ' + cols[1] + ' ' + random.choice(eof_bof) + '\n')
 
 elif key_type == 'monoint' :
     keymap = {}
@@ -142,9 +166,9 @@ elif key_type == 'monoint' :
             if test_type == 'performance' :
                 f_txn_out.write (cols[0] + ' ' + 'EQ' + ' ' + str(keymap[int(cols[1])]) + ' ' + 'EOF' + ' ' + cols[2] + '\n')
             elif test_type == 'coverage' :
-                wraparound_second_key = (int(cols[1]) + int(cols[2])) % count
+                wraparound_second_key = (keymap.keys().index(int(cols[1])) + int(cols[2])) % count
                 f_txn_out.write (cols[0] + ' ' + random.choice(operators) + ' ' + str(keymap[int(cols[1])]) + ' ' +
-                                random.choice(operators) + ' ' + str(wraparound_second_key) + '\n')
+                                random.choice(operators) + ' ' + str(keymap.values()[wraparound_second_key]) + '\n')
         elif cols[0] == 'READ' :
             if test_type == 'performance' :
                 f_txn_out.write ('SCAN' + ' ' + 'EQ' + ' ' + str(keymap[int(cols[1])]) + ' ' + 'EQ' + ' ' + str(keymap[int(cols[1])]) + '\n')
@@ -198,9 +222,9 @@ elif key_type == 'email' :
             if test_type == 'performance' :
                 f_txn_out.write (cols[0] + ' ' + 'EQ' + ' ' + str(keymap[int(cols[1])]) + ' ' + 'EOF' + ' ' + cols[2] + '\n')
             elif test_type == 'coverage' :
-                wraparound_second_key = (int(cols[1]) + int(cols[2])) % tot_count
+                wraparound_second_key = (keymap.keys().index(int(cols[1])) + int(cols[2])) % tot_count
                 f_txn_out.write (cols[0] + ' ' + random.choice(operators) + ' ' + str(keymap[int(cols[1])]) + ' ' +
-                                random.choice(operators) + ' ' + str(wraparound_second_key) + '\n')
+                                random.choice(operators) + ' ' + str(keymap.values()[wraparound_second_key]) + '\n')
         elif cols[0] == 'READ' :
             if test_type == 'performance' :
                 f_txn_out.write ('SCAN' + ' ' + 'EQ' + ' ' + str(keymap[int(cols[1])]) + ' ' + 'EQ' + ' ' + str(keymap[int(cols[1])]) + '\n')
